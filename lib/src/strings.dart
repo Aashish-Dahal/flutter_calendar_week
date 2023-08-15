@@ -43,7 +43,7 @@ Map<String, dynamic> calculateWeekday(
     [bool next = false, DateTime? previousDate]) {
   // Subtract the number of days to get to the previous weekday
   DateTime weekday = next
-      ? previousDate!.subtract(Duration(days: totalWeek))
+      ? previousDate!.add(Duration(days: totalWeek))
       : currentDate.subtract(Duration(days: totalWeek));
 
   // Find the start of the week (Monday) for the previous weekday
