@@ -12,6 +12,9 @@ const List<String> dayOfWeekDefault = [
   'SUN'
 ];
 
+/// List contain day of week
+const List<String> JpDayOfWeekDefault = ['月', '火', '水', '木', '金', '土', '日'];
+
 /// List contain titles month
 const List<String> monthDefaults = [
   'JANUARY',

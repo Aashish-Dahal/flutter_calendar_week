@@ -1,4 +1,5 @@
 import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_calendar_week/src/custom_scroll_behaiver.dart';
 import 'package:flutter_calendar_week/src/date_item.dart';
@@ -9,6 +10,7 @@ import 'package:flutter_calendar_week/src/utils/cache_stream.dart';
 import 'package:flutter_calendar_week/src/utils/compare_date.dart';
 import 'package:flutter_calendar_week/src/utils/find_current_week_index.dart';
 import 'package:flutter_calendar_week/src/utils/separate_weeks.dart';
+import 'package:intl/intl.dart';
 
 class CalendarWeekController {
 /*
@@ -110,7 +112,7 @@ class CalendarWeek extends StatefulWidget {
   final DateTime maxDate;
 
   /// Style of months
-  final Widget Function(DateTime)? monthViewBuilder;
+  final Widget Function(DateTime, PageController)? monthViewBuilder;
 
   /// Style of day of week
   final TextStyle dayOfWeekStyle;
@@ -142,6 +144,9 @@ class CalendarWeek extends StatefulWidget {
   /// [Callback] function for press event
   final void Function(DateTime) onDatePressed;
 
+  /// [Callback] function for press event
+  final void Function(DateTime) onMonthPressed;
+
   /// [Callback] function for long press even
   final void Function(DateTime) onDateLongPressed;
 
@@ -156,6 +161,9 @@ class CalendarWeek extends StatefulWidget {
 
   /// Condition show month
   final bool monthDisplay;
+
+  /// Condition show days and week
+  final bool daysOfWeekDisplay;
 
   /// List contain indexes of weekends from days titles list
   final List<int> weekendsIndexes;
@@ -175,6 +183,11 @@ class CalendarWeek extends StatefulWidget {
   /// Height of calendar
   final double height;
 
+  /// locale of calendar
+  final bool enableJpLocale;
+
+  /// Height of calendar
+
   /// Page controller
   final CalendarWeekController? controller;
 
@@ -190,17 +203,20 @@ class CalendarWeek extends StatefulWidget {
       this.dayOfWeekStyle,
       this.monthAlignment,
       this.dateStyle,
+      this.enableJpLocale,
       this.todayDateStyle,
       this.todayBackgroundColor,
       this.datePressedBackgroundColor,
       this.datePressedStyle,
       this.dateBackgroundColor,
       this.onDatePressed,
+      this.onMonthPressed,
       this.onDateLongPressed,
       this.backgroundColor,
       this.daysOfWeek,
       this.months,
       this.monthDisplay,
+      this.daysOfWeekDisplay,
       this.weekendsIndexes,
       this.weekendsStyle,
       this.marginMonth,
@@ -219,12 +235,13 @@ class CalendarWeek extends StatefulWidget {
           DateTime? maxDate,
           DateTime? minDate,
           double height = 100,
-          Widget Function(DateTime)? monthViewBuilder,
+          Widget Function(DateTime, PageController)? monthViewBuilder,
           TextStyle dayOfWeekStyle =
               const TextStyle(color: Colors.blue, fontWeight: FontWeight.w600),
           FractionalOffset monthAlignment = FractionalOffset.center,
           TextStyle dateStyle =
               const TextStyle(color: Colors.blue, fontWeight: FontWeight.w400),
+          bool enableJPLocale = false,
           TextStyle todayDateStyle = const TextStyle(
               color: Colors.orange, fontWeight: FontWeight.w400),
           Color todayBackgroundColor = Colors.black12,
@@ -233,11 +250,13 @@ class CalendarWeek extends StatefulWidget {
               const TextStyle(color: Colors.white, fontWeight: FontWeight.w400),
           Color dateBackgroundColor = Colors.transparent,
           Function(DateTime)? onDatePressed,
+          Function(DateTime)? onMonthPressed,
           Function(DateTime)? onDateLongPressed,
           Color backgroundColor = Colors.white,
           List<String> dayOfWeek = dayOfWeekDefault,
           List<String> month = monthDefaults,
           bool showMonth = true,
+          bool showDayOfWeek = true,
           List<int> weekendsIndexes = weekendsIndexesDefault,
           TextStyle weekendsStyle =
               const TextStyle(color: Colors.red, fontWeight: FontWeight.w600),
@@ -256,17 +275,20 @@ class CalendarWeek extends StatefulWidget {
           dayOfWeekStyle,
           monthAlignment,
           dateStyle,
+          enableJPLocale,
           todayDateStyle,
           todayBackgroundColor,
           pressedDateBackgroundColor,
           pressedDateStyle,
           dateBackgroundColor,
           onDatePressed ?? (DateTime date) {},
+          onMonthPressed ?? (DateTime date) {},
           onDateLongPressed ?? (DateTime date) {},
           backgroundColor,
           dayOfWeek,
           month,
           showMonth,
+          showDayOfWeek,
           weekendsIndexes,
           weekendsStyle,
           marginMonth,
@@ -338,33 +360,44 @@ class _CalendarWeekState extends State<CalendarWeek> {
       child: ScrollConfiguration(
         behavior: CustomScrollBehavior(),
         child: PageView.builder(
-          controller: _pageController,
-          itemCount: controller._weeks.length,
-          onPageChanged: (currentPage) {
-            widget.controller!._currentWeekIndex = currentPage;
-            widget.onWeekChanged();
-          },
-          itemBuilder: (_, i) => _week(controller._weeks[i]),
-        ),
+            controller: _pageController,
+            physics: NeverScrollableScrollPhysics(),
+            itemCount: widget.daysOfWeekDisplay
+                ? controller._weeks.length
+                : widget.months.length,
+            onPageChanged: (currentPage) {
+              widget.controller!._currentWeekIndex = currentPage;
+              widget.onWeekChanged();
+            },
+            itemBuilder: (_, i) =>
+                _week(controller._weeks[i], _pageController)),
       ));
 
   /// Layout of week
-  Widget _week(WeekItem weeks) => Column(
+  Widget _week(WeekItem weeks, PageController controller) => Column(
         mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget>[
           // Month
           (widget.monthDisplay &&
                   widget.monthViewBuilder != null &&
                   weeks.days.firstWhere((el) => el != null) != null)
-              ? widget
-                  .monthViewBuilder!(weeks.days.firstWhere((el) => el != null)!)
+              ? widget.daysOfWeekDisplay
+                  ? widget.monthViewBuilder!(
+                      weeks.days.firstWhere((el) => el != null)!, controller)
+                  : widget.monthViewBuilder!(
+                      DateFormat('M').parse(controller.page == null
+                          ? '0'
+                          : '${controller.page?.toInt()}'),
+                      controller)
               : _monthItem(weeks.month),
 
-          /// Day of week layout
-          _dayOfWeek(weeks.dayOfWeek),
+          if (widget.daysOfWeekDisplay) ...[
+            /// Day of week layout
+            _dayOfWeek(weeks.dayOfWeek),
 
-          /// Date layout
-          _dates(weeks.days)
+            /// Date layout
+            _dates(weeks.days)
+          ]
         ],
       );
 
