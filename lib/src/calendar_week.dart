@@ -411,7 +411,7 @@ class _CalendarWeekState extends State<CalendarWeek> {
                       calculateStartAndEndDates(
                           DateTime.now().year,
                           !controller.position.hasContentDimensions
-                              ? DateTime.now().month
+                              ? DateTime.now().month - 1
                               : controller.page!.toInt()))
               : _monthItem(weeks.month),
 
