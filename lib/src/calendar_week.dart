@@ -150,9 +150,6 @@ class CalendarWeek extends StatefulWidget {
   /// [Callback] function for long press even
   final void Function(DateTime) onDateLongPressed;
 
-  /// Background color of calendar
-  final Color backgroundColor;
-
   /// Box decoration of calendar
   Decoration? decoration;
 
@@ -216,7 +213,6 @@ class CalendarWeek extends StatefulWidget {
       this.onDatePressed,
       this.onMonthPressed,
       this.onDateLongPressed,
-      this.backgroundColor,
       this.daysOfWeek,
       this.months,
       this.monthDisplay,
@@ -257,7 +253,6 @@ class CalendarWeek extends StatefulWidget {
           Function(DateTime)? onDatePressed,
           Function(DateTime)? onMonthPressed,
           Function(DateTime)? onDateLongPressed,
-          Color backgroundColor = Colors.white,
           List<String> dayOfWeek = dayOfWeekDefault,
           List<String> month = monthDefaults,
           bool showMonth = true,
@@ -290,7 +285,6 @@ class CalendarWeek extends StatefulWidget {
           onDatePressed ?? (DateTime date) {},
           onMonthPressed ?? (DateTime date) {},
           onDateLongPressed ?? (DateTime date) {},
-          backgroundColor,
           dayOfWeek,
           month,
           showMonth,
@@ -361,7 +355,6 @@ class _CalendarWeekState extends State<CalendarWeek> {
   /// Body layout
   Widget _body() => Container(
       decoration: widget.decoration,
-      color: widget.backgroundColor,
       width: double.infinity,
       height: widget.height,
       child: ScrollConfiguration(
