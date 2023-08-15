@@ -144,6 +144,9 @@ class CalendarWeek extends StatefulWidget {
   /// [Callback] function for press event
   final void Function(DateTime) onDatePressed;
 
+  /// disable date press event
+  final bool datePressedDisabled;
+
   /// [Callback] function for press event
   final void Function(DateTime) onMonthPressed;
 
@@ -211,6 +214,7 @@ class CalendarWeek extends StatefulWidget {
       this.datePressedStyle,
       this.dateBackgroundColor,
       this.onDatePressed,
+      this.datePressedDisabled,
       this.onMonthPressed,
       this.onDateLongPressed,
       this.daysOfWeek,
@@ -251,6 +255,7 @@ class CalendarWeek extends StatefulWidget {
               const TextStyle(color: Colors.white, fontWeight: FontWeight.w400),
           Color dateBackgroundColor = Colors.transparent,
           Function(DateTime)? onDatePressed,
+          bool datePressedDisabled = false,
           Function(DateTime)? onMonthPressed,
           Function(DateTime)? onDateLongPressed,
           List<String> dayOfWeek = dayOfWeekDefault,
@@ -283,6 +288,7 @@ class CalendarWeek extends StatefulWidget {
           pressedDateStyle,
           dateBackgroundColor,
           onDatePressed ?? (DateTime date) {},
+          datePressedDisabled,
           onMonthPressed ?? (DateTime date) {},
           onDateLongPressed ?? (DateTime date) {},
           dayOfWeek,
@@ -473,10 +479,12 @@ class _CalendarWeekState extends State<CalendarWeek> {
         return FractionalOffset.center;
       }(),
       dayShapeBorder: widget.dayShapeBorder,
-      onDatePressed: (datePressed) {
-        controller._selectedDate = datePressed;
-        widget.onDatePressed(datePressed);
-      },
+      onDatePressed: widget.datePressedDisabled
+          ? null
+          : (datePressed) {
+              controller._selectedDate = datePressed;
+              widget.onDatePressed(datePressed);
+            },
       onDateLongPressed: (datePressed) {
         controller._selectedDate = datePressed;
         widget.onDateLongPressed(datePressed);
