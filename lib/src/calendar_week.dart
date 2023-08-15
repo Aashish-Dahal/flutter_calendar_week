@@ -112,7 +112,7 @@ class CalendarWeek extends StatefulWidget {
   final DateTime maxDate;
 
   /// Style of months
-  final Widget Function(DateTime, PageController,
+  final Widget Function(DateTime, PageController, bool,
       [Map<String, dynamic> dateTimeRange])? monthViewBuilder;
 
   /// Style of day of week
@@ -241,7 +241,7 @@ class CalendarWeek extends StatefulWidget {
           DateTime? minDate,
           double height = 100,
           Decoration? decoration,
-          Widget Function(DateTime, PageController,
+          Widget Function(DateTime, PageController, bool,
                   [Map<String, dynamic> dateTimeRange])?
               monthViewBuilder,
           TextStyle dayOfWeekStyle =
@@ -330,9 +330,8 @@ class _CalendarWeekState extends State<CalendarWeek> {
 
   void _jumToDateHandler(DateTime? dateTime) {
     _cacheStream.add(dateTime);
-    if (widget.daysOfWeekDisplay)
-      _pageController.animateToPage(widget.controller!._currentWeekIndex,
-          duration: Duration(milliseconds: 300), curve: Curves.ease);
+    _pageController.animateToPage(widget.controller!._currentWeekIndex,
+        duration: Duration(milliseconds: 300), curve: Curves.ease);
   }
 
   void _setUp() {
@@ -345,17 +344,15 @@ class _CalendarWeekState extends State<CalendarWeek> {
 
       /// [_currentWeekIndex] is index of week in [List] weeks contain today
 
-      .._currentWeekIndex =
-          findCurrentWeekIndexByDate(controller._today, controller._weeks)
+      .._currentWeekIndex = widget.daysOfWeekDisplay
+          ? findCurrentWeekIndexByDate(controller._today, controller._weeks)
+          : DateTime.now().month
       .._widgetJumpToDate = _jumToDateHandler
       .._hasClient = true;
 
     /// Init Page controller
     /// Set [initialPage] is page contain today
-    _pageController = PageController(
-        initialPage: widget.daysOfWeekDisplay
-            ? controller._currentWeekIndex
-            : DateTime.now().month);
+    _pageController = PageController(initialPage: controller._currentWeekIndex);
   }
 
   @override
@@ -400,12 +397,17 @@ class _CalendarWeekState extends State<CalendarWeek> {
                   ? widget.monthViewBuilder!(
                       weeks.days.firstWhere((el) => el != null)!,
                       controller,
+                      true,
                       calculateWeekday())
                   : widget.monthViewBuilder!(
-                      DateFormat('M').parse(controller.page == null
-                          ? '0'
-                          : '${controller.page?.toInt()}'),
-                      controller)
+                      !controller.position.hasContentDimensions
+                          ? DateFormat('M')
+                              .parse(DateTime.now().month.toString())
+                          : (DateFormat('M').parse(controller.page == null
+                              ? '0'
+                              : '${controller.page?.toInt()}')),
+                      controller,
+                      false)
               : _monthItem(weeks.month),
 
           if (widget.daysOfWeekDisplay) ...[
