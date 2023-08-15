@@ -330,7 +330,7 @@ class _CalendarWeekState extends State<CalendarWeek> {
   }
 
   void _setUp() {
-    assert(controller.hasClient == false);
+    //assert(controller.hasClient == false);
     _stream ??= _cacheStream.stream!.asBroadcastStream();
     controller
       .._weeks.clear()
