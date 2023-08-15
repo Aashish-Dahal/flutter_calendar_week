@@ -328,14 +328,11 @@ class _CalendarWeekState extends State<CalendarWeek> {
   CalendarWeekController get controller =>
       widget.controller ?? _defaultCalendarController;
 
-  void _jumToDateHandler(DateTime? dateTime) async {
+  void _jumToDateHandler(DateTime? dateTime) {
     _cacheStream.add(dateTime);
-    await _pageController.animateToPage(
-        widget.daysOfWeekDisplay
-            ? widget.controller!._currentWeekIndex
-            : DateTime.now().month,
-        duration: Duration(milliseconds: 300),
-        curve: Curves.ease);
+    if (widget.daysOfWeekDisplay)
+      _pageController.animateToPage(widget.controller!._currentWeekIndex,
+          duration: Duration(milliseconds: 300), curve: Curves.ease);
   }
 
   void _setUp() {
