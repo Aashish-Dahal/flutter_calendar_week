@@ -312,6 +312,8 @@ class CalendarWeek extends StatefulWidget {
 }
 
 class _CalendarWeekState extends State<CalendarWeek> {
+  int currentMonth = DateTime.now().month;
+
   /// [_streamController] for emit date press event
   final CacheStream<DateTime?> _cacheStream = CacheStream<DateTime?>();
 
@@ -349,7 +351,10 @@ class _CalendarWeekState extends State<CalendarWeek> {
 
     /// Init Page controller
     /// Set [initialPage] is page contain today
-    _pageController = PageController(initialPage: controller._currentWeekIndex);
+    _pageController = PageController(
+        initialPage: widget.daysOfWeekDisplay
+            ? controller._currentWeekIndex
+            : DateTime.now().month);
   }
 
   @override
