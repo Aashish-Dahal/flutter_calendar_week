@@ -40,7 +40,7 @@ DateTime endOfWeekday = DateTime.now();
 int totalWeek = 0;
 
 Map<String, dynamic> calculateWeekday(
-    [bool next = true, DateTime? previousDate]) {
+    [bool next = false, DateTime? previousDate]) {
   // Subtract the number of days to get to the previous weekday
   DateTime weekday = next
       ? previousDate!.add(Duration(days: totalWeek))
