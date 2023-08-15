@@ -407,7 +407,12 @@ class _CalendarWeekState extends State<CalendarWeek> {
                               ? '0'
                               : '${controller.page?.toInt()}')),
                       controller,
-                      false)
+                      false,
+                      calculateStartAndEndDates(
+                          DateTime.now().year,
+                          !controller.position.hasContentDimensions
+                              ? DateTime.now().month
+                              : controller.page!.toInt()))
               : _monthItem(weeks.month),
 
           if (widget.daysOfWeekDisplay) ...[

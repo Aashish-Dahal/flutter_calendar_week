@@ -60,3 +60,13 @@ Map<String, dynamic> calculateWeekday(
     "end_date": DateFormat('yyyy-MM-dd').format(endOfWeekday),
   };
 }
+
+Map<String, dynamic> calculateStartAndEndDates(int year, int month) {
+  DateTime firstDayOfMonth = DateTime(year, month, 1);
+  DateTime lastDayOfMonth = DateTime(year, month + 1, 0);
+
+  return {
+    'start_date': DateFormat('yyyy-MM-dd').format(firstDayOfMonth),
+    'end_date': DateFormat('yyyy-MM-dd').format(lastDayOfMonth)
+  };
+}
