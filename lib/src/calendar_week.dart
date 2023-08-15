@@ -151,7 +151,7 @@ class CalendarWeek extends StatefulWidget {
   final void Function(DateTime) onDateLongPressed;
 
   /// Box decoration of calendar
-  Decoration? decoration;
+  final Decoration? decoration;
 
   /// List contain titles day of week
   final List<String> daysOfWeek;
