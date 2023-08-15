@@ -405,7 +405,7 @@ class _CalendarWeekState extends State<CalendarWeek> {
                               .parse(DateTime.now().month.toString())
                           : (DateFormat('M').parse(controller.page == null
                               ? '0'
-                              : '${controller.page?.toInt()}')),
+                              : '${controller.page?.round()}')),
                       controller,
                       false,
                       calculateStartAndEndDates(
