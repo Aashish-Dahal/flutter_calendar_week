@@ -16,6 +16,9 @@ class DateItem extends StatefulWidget {
   /// Style of day after pressed
   final TextStyle? pressedDateStyle;
 
+  /// disable onTap event
+  final bool disable;
+
   /// Background
   final Color? backgroundColor;
 
@@ -48,6 +51,7 @@ class DateItem extends StatefulWidget {
     required this.date,
     required this.cacheStream,
     this.dateStyle,
+    this.disable = false,
     this.pressedDateStyle,
     this.backgroundColor = Colors.transparent,
     this.todayBackgroundColor = Colors.orangeAccent,
@@ -105,9 +109,9 @@ class __DateItemState extends State<DateItem> {
         height: 50,
         alignment: FractionalOffset.center,
         child: GestureDetector(
-          onLongPress: _onLongPressed,
+          onLongPress: widget.disable ? null : _onLongPressed,
           child: GestureDetector(
-            onTap: _onPressed,
+            onTap: widget.disable ? null : _onPressed,
             child: Container(
                 decoration: BoxDecoration(
                   color: _defaultBackgroundColor!,

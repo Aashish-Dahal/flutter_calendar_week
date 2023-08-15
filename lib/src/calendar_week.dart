@@ -457,6 +457,7 @@ class _CalendarWeekState extends State<CalendarWeek> {
   Widget _dateItem(DateTime? date) => DateItem(
       today: controller._today,
       date: date,
+      disable: widget.datePressedDisabled,
       dateStyle: compareDate(date, controller._today)
           ? widget.todayDateStyle
           : date != null && (date.weekday == 6 || date.weekday == 7)
@@ -479,12 +480,10 @@ class _CalendarWeekState extends State<CalendarWeek> {
         return FractionalOffset.center;
       }(),
       dayShapeBorder: widget.dayShapeBorder,
-      onDatePressed: widget.datePressedDisabled
-          ? null
-          : (datePressed) {
-              controller._selectedDate = datePressed;
-              widget.onDatePressed(datePressed);
-            },
+      onDatePressed: (datePressed) {
+        controller._selectedDate = datePressed;
+        widget.onDatePressed(datePressed);
+      },
       onDateLongPressed: (datePressed) {
         controller._selectedDate = datePressed;
         widget.onDateLongPressed(datePressed);
