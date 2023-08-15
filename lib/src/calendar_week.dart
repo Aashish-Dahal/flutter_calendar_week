@@ -153,6 +153,9 @@ class CalendarWeek extends StatefulWidget {
   /// Background color of calendar
   final Color backgroundColor;
 
+  /// Box decoration of calendar
+  Decoration? decoration;
+
   /// List contain titles day of week
   final List<String> daysOfWeek;
 
@@ -199,6 +202,7 @@ class CalendarWeek extends StatefulWidget {
       this.maxDate,
       this.minDate,
       this.height,
+      this.decoration,
       this.monthViewBuilder,
       this.dayOfWeekStyle,
       this.monthAlignment,
@@ -235,6 +239,7 @@ class CalendarWeek extends StatefulWidget {
           DateTime? maxDate,
           DateTime? minDate,
           double height = 100,
+          Decoration? decoration,
           Widget Function(DateTime, PageController)? monthViewBuilder,
           TextStyle dayOfWeekStyle =
               const TextStyle(color: Colors.blue, fontWeight: FontWeight.w600),
@@ -271,6 +276,7 @@ class CalendarWeek extends StatefulWidget {
           maxDate ?? DateTime.now().add(Duration(days: 180)),
           minDate ?? DateTime.now().add(Duration(days: -180)),
           height,
+          decoration,
           monthViewBuilder,
           dayOfWeekStyle,
           monthAlignment,
@@ -354,6 +360,7 @@ class _CalendarWeekState extends State<CalendarWeek> {
 
   /// Body layout
   Widget _body() => Container(
+      decoration: widget.decoration,
       color: widget.backgroundColor,
       width: double.infinity,
       height: widget.height,
