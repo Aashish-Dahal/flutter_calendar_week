@@ -112,7 +112,10 @@ class CalendarWeek extends StatefulWidget {
   final DateTime maxDate;
 
   /// Style of months
-  final Widget Function(DateTime, PageController, bool)? monthViewBuilder;
+  final Widget Function(
+    DateTime,
+    PageController,
+  )? monthViewBuilder;
 
   /// Style of day of week
   final TextStyle dayOfWeekStyle;
@@ -243,7 +246,6 @@ class CalendarWeek extends StatefulWidget {
           Widget Function(
             DateTime,
             PageController,
-            bool,
           )? monthViewBuilder,
           TextStyle dayOfWeekStyle =
               const TextStyle(color: Colors.blue, fontWeight: FontWeight.w600),
@@ -396,10 +398,7 @@ class _CalendarWeekState extends State<CalendarWeek> {
                   weeks.days.firstWhere((el) => el != null) != null)
               ? widget.daysOfWeekDisplay
                   ? widget.monthViewBuilder!(
-                      weeks.days.firstWhere((el) => el != null)!,
-                      controller,
-                      true,
-                    )
+                      weeks.days.firstWhere((el) => el != null)!, controller)
                   : widget.monthViewBuilder!(
                       !controller.position.hasContentDimensions
                           ? DateFormat('M')
@@ -407,9 +406,7 @@ class _CalendarWeekState extends State<CalendarWeek> {
                           : (DateFormat('M').parse(controller.page == null
                               ? '0'
                               : '${controller.page?.round()}')),
-                      controller,
-                      false,
-                    )
+                      controller)
               : _monthItem(weeks.month),
 
           if (widget.daysOfWeekDisplay) ...[
