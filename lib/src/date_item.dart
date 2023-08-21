@@ -128,7 +128,7 @@ class __DateItemState extends State<DateItem> {
                       child: FittedBox(
                         fit: BoxFit.scaleDown,
                         child: Text(
-                          '${widget.date!.day}',
+                          '${widget.date!.day} 日',
                           style: _defaultTextStyle!,
                         ),
                       ),
